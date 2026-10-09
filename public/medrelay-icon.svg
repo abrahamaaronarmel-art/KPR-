@@ -1,11 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <defs>
-    <linearGradient id="medGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#5841D8" />
-      <stop offset="100%" stop-color="#00A884" />
-    </linearGradient>
-  </defs>
-  <rect x="5" y="5" width="90" height="90" rx="24" fill="url(#medGrad)" />
-  <path d="M50 22v56M22 50h56" stroke="#ffffff" stroke-width="11" stroke-linecap="round" />
-  <circle cx="50" cy="50" r="6" fill="#ffffff" />
+  <circle cx="50" cy="50" r="48" fill="#143827" />
+  <g transform="translate(10, 10) scale(3.333)" stroke="#C6F052" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" />
+  </g>
 </svg>

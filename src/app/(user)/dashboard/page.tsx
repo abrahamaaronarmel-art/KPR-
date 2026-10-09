@@ -125,8 +125,8 @@ export default function UserDashboard() {
               <p className="text-sm text-slate-300 mb-6">Start a new AI Voice Triage session or contact emergency services.</p>
               
               <div className="space-y-3">
-                 <Link href="/" className="w-full flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-500 text-white py-3 rounded-xl font-bold transition-colors shadow-sm">
-                    <Activity size={18} /> Start Voice Triage
+                 <Link href="/ai" className="w-full flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-500 text-white py-3 rounded-xl font-bold transition-colors shadow-sm">
+                    <Activity size={18} /> Start MedRelay AI Triage
                  </Link>
                  <button className="w-full flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-xl font-bold transition-colors">
                     <AlertCircle size={18} className="text-red-400" /> Emergency Ambulance

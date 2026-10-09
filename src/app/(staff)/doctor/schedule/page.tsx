@@ -1,131 +1,222 @@
-import { Calendar as CalendarIcon, Clock, Video, Phone, CheckCircle2, ChevronLeft, ChevronRight, Settings } from "lucide-react"
+"use client"
+
+import { useState } from "react"
+import { Calendar as CalendarIcon, Clock, Video, Phone, CheckCircle2, ChevronLeft, ChevronRight, Settings, Sparkles, User } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
 export default function DoctorSchedule() {
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [selectedDay, setSelectedDay] = useState(9)
+  const [isAvailable, setIsAvailable] = useState(true)
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg)
+    setTimeout(() => setToastMessage(null), 3000)
+  }
+
   const schedule = [
-    { time: "09:00 AM", type: "Video Consult", patient: "Emma Watson", duration: "30 min", status: "Completed", isCurrent: false },
-    { time: "10:30 AM", type: "Audio Call", patient: "John Doe", duration: "15 min", status: "Upcoming", isCurrent: true },
-    { time: "11:00 AM", type: "Video Consult", patient: "Liam Neeson", duration: "45 min", status: "Upcoming", isCurrent: false },
-    { time: "01:00 PM", type: "Follow-up", patient: "Alice Freeman", duration: "15 min", status: "Upcoming", isCurrent: false },
-    { time: "03:30 PM", type: "Video Consult", patient: "David Chen", duration: "30 min", status: "Upcoming", isCurrent: false },
+    { time24: "09:00", type: "Video Teleconsult", patient: "Rajesh Kumar (PT-8891)", duration: "30 min", status: "Completed", isCurrent: false },
+    { time24: "10:30", type: "Audio Triage Call", patient: "Priya Sundaram (PT-4421)", duration: "15 min", status: "Upcoming", isCurrent: true },
+    { time24: "11:00", type: "Video Teleconsult", patient: "Murugan Swamy (PT-9102)", duration: "45 min", status: "Upcoming", isCurrent: false },
+    { time24: "13:00", type: "Post-Op Follow-up", patient: "Kavitha Ranganathan (PT-2091)", duration: "20 min", status: "Upcoming", isCurrent: false },
+    { time24: "15:30", type: "Video Teleconsult", patient: "Anand Govindarajan (PT-5512)", duration: "30 min", status: "Upcoming", isCurrent: false },
   ]
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">My Schedule</h2>
-          <p className="text-slate-500">Manage your daily appointments and working hours.</p>
+    <div className="space-y-6 max-w-7xl mx-auto pb-16 text-[#143827]">
+      
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 bg-[#143827] text-[#C6F052] px-5 py-3 rounded-2xl shadow-xl border border-[#C6F052]/30 text-xs font-bold animate-in fade-in flex items-center gap-2">
+          <Sparkles size={16} className="text-[#C6F052]" />
+          <span>{toastMessage}</span>
         </div>
-        <Button variant="outline" className="text-slate-600 border-slate-300">
-          <Settings className="w-4 h-4 mr-2" /> Working Hours
+      )}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight text-[#143827]">My Clinical Schedule</h1>
+          <p className="text-xs text-[#5E806E] font-medium mt-1">
+            24-hour duty roster, teleconsult queue, and OPD slots at Indira Gandhi Govt General Hospital
+          </p>
+        </div>
+        <Button 
+          onClick={() => showToast("Duty shift configured: 08:00 to 16:00 HRS Active")}
+          className="bg-[#143827] hover:bg-[#0E2419] text-[#C6F052] rounded-full text-xs font-bold px-4 py-2 flex items-center gap-1.5 shadow-md shadow-[#143827]/15"
+        >
+          <Settings className="w-4 h-4" />
+          <span>Configure 24h Duty Shift</span>
         </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Left Column: Calendar UI (Mock) */}
+        {/* Left Column: Calendar UI */}
         <div className="lg:col-span-1 space-y-6">
-          <Card className="border-0 shadow-sm">
-            <CardHeader className="bg-slate-50 border-b rounded-t-xl py-4 flex flex-row items-center justify-between space-y-0">
-              <h3 className="font-bold text-slate-900 flex items-center gap-2"><CalendarIcon size={18} className="text-indigo-600"/> September 2026</h3>
-              <div className="flex items-center gap-1">
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500"><ChevronLeft size={16} /></Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500"><ChevronRight size={16} /></Button>
+          <div className="bg-white border border-[#E2E8D5] rounded-[32px] p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-[#E2E8D5] pb-3">
+              <h3 className="font-black text-[#143827] flex items-center gap-2 text-sm">
+                <CalendarIcon size={16} className="text-emerald-700"/>
+                <span>October 2026</span>
+              </h3>
+              <div className="flex items-center gap-1 text-[#143827]">
+                <button 
+                  onClick={() => showToast("Navigating to previous month")}
+                  className="p-1 rounded-full hover:bg-[#F6F8F0]"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button 
+                  onClick={() => showToast("Navigating to next month")}
+                  className="p-1 rounded-full hover:bg-[#F6F8F0]"
+                >
+                  <ChevronRight size={16} />
+                </button>
               </div>
-            </CardHeader>
-            <CardContent className="p-6">
-               {/* Mini Calendar Mock */}
-               <div className="grid grid-cols-7 gap-2 text-center text-xs font-semibold text-slate-500 mb-2">
-                 <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
-               </div>
-               <div className="grid grid-cols-7 gap-2 text-center text-sm font-medium">
-                 {/* Empty days */}
-                 <div className="p-2 text-slate-300">30</div>
-                 <div className="p-2 text-slate-300">31</div>
-                 
-                 {/* Active days */}
-                 {[1,2,3,4,5,6].map(d => (
-                   <div key={d} className="p-2 hover:bg-slate-100 rounded-lg cursor-pointer text-slate-700">{d}</div>
-                 ))}
-                 
-                 {/* Today */}
-                 <div className="p-2 bg-indigo-600 text-white rounded-lg cursor-pointer shadow-md shadow-indigo-200">7</div>
-                 
-                 {[8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30].map(d => (
-                   <div key={d} className="p-2 hover:bg-slate-100 rounded-lg cursor-pointer text-slate-700">{d}</div>
-                 ))}
-               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          <Card className="border-0 shadow-sm bg-gradient-to-br from-indigo-600 to-indigo-800 text-white">
-            <CardContent className="p-6">
-              <h3 className="font-bold text-lg mb-2">Availability Status</h3>
-              <p className="text-indigo-100 text-sm mb-6">You are currently visible to patients and accepting live consultation requests.</p>
-              <div className="flex gap-3">
-                <Button className="flex-1 bg-white text-indigo-700 hover:bg-slate-100 hover:text-indigo-800 font-bold">Online</Button>
-                <Button variant="outline" className="flex-1 border-indigo-400 text-indigo-100 hover:bg-indigo-700 hover:text-white">Busy</Button>
-              </div>
-            </CardContent>
-          </Card>
+            {/* Mini Calendar */}
+            <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-[#5E806E]">
+              <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+            </div>
+            
+            <div className="grid grid-cols-7 gap-1 text-center text-xs">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(d => (
+                <button 
+                  key={d} 
+                  onClick={() => {
+                    setSelectedDay(d)
+                    showToast(`Selected date: Oct ${d}, 2026`)
+                  }}
+                  className={`p-2 rounded-xl font-bold transition-all ${selectedDay === d ? "bg-[#143827] text-[#C6F052]" : "text-[#5E806E] hover:bg-[#F6F8F0]"}`}
+                >
+                  {d}
+                </button>
+              ))}
+              
+              <button 
+                onClick={() => {
+                  setSelectedDay(9)
+                  showToast("Selected date: Oct 9, 2026 (Today)")
+                }}
+                className="p-2 bg-[#143827] text-[#C6F052] font-black rounded-xl shadow-xs"
+              >
+                9
+              </button>
+              
+              {[10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31].map(d => (
+                <button 
+                  key={d} 
+                  onClick={() => {
+                    setSelectedDay(d)
+                    showToast(`Selected date: Oct ${d}, 2026`)
+                  }}
+                  className={`p-2 rounded-xl font-bold transition-all ${selectedDay === d ? "bg-[#143827] text-[#C6F052]" : "text-slate-600 hover:bg-[#F6F8F0]"}`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-[#143827] text-white rounded-[32px] p-6 shadow-md border border-[#C6F052]/30 space-y-3">
+            <h3 className="font-black text-lg text-white">Consultation Status</h3>
+            <p className="text-white/80 text-xs">
+              You are currently active on the Puducherry HIS Teleconsultation &amp; OPD network.
+            </p>
+            <div className="flex gap-2.5 pt-2">
+              <Button 
+                onClick={() => {
+                  setIsAvailable(true)
+                  showToast("✅ Doctor status set to Available & Accepting Patients")
+                }}
+                className={`flex-1 rounded-full text-xs font-bold ${isAvailable ? "bg-[#C6F052] text-[#143827] hover:bg-[#b0dc3d]" : "bg-white/20 text-white"}`}
+              >
+                Available (24h)
+              </Button>
+              <Button 
+                onClick={() => {
+                  setIsAvailable(false)
+                  showToast("Doctor status set to In-Surgery / Busy")
+                }}
+                className={`flex-1 rounded-full text-xs font-bold ${!isAvailable ? "bg-rose-500 text-white" : "bg-white/20 text-white"}`}
+              >
+                In-Surgery / Busy
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Right Column: Timeline */}
         <div className="lg:col-span-2">
-          <Card className="border-0 shadow-sm min-h-full">
-            <CardHeader className="bg-slate-50 border-b rounded-t-xl">
-              <CardTitle className="text-slate-900 text-lg flex items-center justify-between">
-                <span>Today's Appointments</span>
-                <span className="text-sm font-medium text-slate-500 bg-white px-3 py-1 rounded-full border">5 Total</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              
-              <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
-                
-                {schedule.map((slot, i) => (
-                  <div key={i} className={`relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active`}>
-                    
-                    {/* Icon */}
-                    <div className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 ${
-                      slot.status === 'Completed' ? 'bg-green-500 text-white' :
-                      slot.isCurrent ? 'bg-indigo-600 text-white animate-pulse' :
-                      'bg-slate-200 text-slate-500'
-                    }`}>
-                      {slot.status === 'Completed' ? <CheckCircle2 size={16} /> : <Clock size={16} />}
-                    </div>
-
-                    {/* Card */}
-                    <div className={`w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border ${
-                      slot.isCurrent ? 'bg-indigo-50 border-indigo-200 shadow-md' : 'bg-white border-slate-200 shadow-sm'
-                    }`}>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className={`font-bold ${slot.isCurrent ? 'text-indigo-700' : 'text-slate-900'}`}>{slot.time}</span>
-                        <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">{slot.duration}</span>
-                      </div>
-                      <div className="font-bold text-lg text-slate-800 mb-2">{slot.patient}</div>
-                      <div className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                        {slot.type.includes('Video') ? <Video size={14} className="text-indigo-500"/> : <Phone size={14} className="text-teal-500"/>}
-                        {slot.type}
-                      </div>
-                      
-                      {slot.isCurrent && (
-                        <div className="mt-4">
-                          <Button className="w-full bg-indigo-600 hover:bg-indigo-700 h-10 shadow-md">Join Call</Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                
+          <div className="bg-white border border-[#E2E8D5] rounded-[32px] p-6 shadow-xs space-y-5">
+            <div className="flex items-center justify-between border-b border-[#E2E8D5] pb-4">
+              <div>
+                <h2 className="text-lg font-black text-[#143827]">Today's 24-Hour Appointments</h2>
+                <p className="text-xs text-[#5E806E]">5 Scheduled consultations for Oct 9, 2026</p>
               </div>
+              <span className="text-xs font-bold bg-[#F4F6EC] text-[#143827] px-3 py-1 rounded-full border border-[#E2E8D5]">
+                5 Total
+              </span>
+            </div>
 
-            </CardContent>
-          </Card>
+            <div className="space-y-4">
+              {schedule.map((slot, i) => (
+                <div 
+                  key={i} 
+                  className={`p-4 rounded-2xl border transition-all ${
+                    slot.isCurrent 
+                      ? "bg-[#F4F6EC] border-[#143827] shadow-xs ring-1 ring-[#143827]" 
+                      : "bg-white border-[#E2E8D5] hover:bg-[#F6F8F0]"
+                  }`}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-black text-sm text-[#143827] flex items-center gap-1.5">
+                        <Clock size={14} className="text-emerald-700" />
+                        <span>{slot.time24} HRS</span>
+                      </span>
+                      <span className="text-[11px] font-bold text-[#5E806E] bg-white px-2.5 py-0.5 rounded-full border border-[#E2E8D5]">
+                        {slot.duration}
+                      </span>
+                    </div>
+
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-block ${
+                      slot.status === 'Completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {slot.status}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <div className="font-black text-base text-[#143827]">{slot.patient}</div>
+                      <div className="flex items-center gap-2 text-xs text-[#5E806E] font-medium mt-0.5">
+                        {slot.type.includes('Video') ? <Video size={13} className="text-blue-600"/> : <Phone size={13} className="text-emerald-700"/>}
+                        <span>{slot.type}</span>
+                      </div>
+                    </div>
+
+                    {slot.isCurrent && (
+                      <Button 
+                        onClick={() => showToast(`Connecting live to consultation with ${slot.patient}...`)}
+                        className="bg-[#143827] hover:bg-[#0E2419] text-[#C6F052] rounded-full text-xs font-bold px-5 h-9 shadow-sm"
+                      >
+                        <Video size={13} className="mr-1.5" />
+                        <span>Join Live Call</span>
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
+
       </div>
+
     </div>
   )
 }

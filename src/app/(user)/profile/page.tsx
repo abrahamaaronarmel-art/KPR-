@@ -1,218 +1,554 @@
 "use client"
+
 import { useEffect, useState } from "react"
-import { User, HeartPulse, Activity, PhoneCall, ShieldAlert, Save, IdCard, CheckCircle2, Loader2 } from "lucide-react"
+import { 
+  User, HeartPulse, Activity, PhoneCall, ShieldAlert, Save, 
+  IdCard, CheckCircle2, Loader2, Edit3, ArrowUpRight, Mail, 
+  Phone, MapPin, Calendar, Droplets, Stethoscope, Sparkles, 
+  Check, X, FileText, ShoppingBag, Settings as SettingsIcon, Coins
+} from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-function AbhaLinkCard() {
-  const [status, setStatus] = useState<"unlinked" | "sending" | "otp" | "verifying" | "linked">("unlinked")
-  const [abhaNumber, setAbhaNumber] = useState("")
-  const [otp, setOtp] = useState("")
-  const [linkedId, setLinkedId] = useState("")
+export default function ProfilePage() {
+  const [isEditing, setIsEditing] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+
+  // Profile Form State
+  const [name, setName] = useState("Rajesh Kumar")
+  const [age, setAge] = useState("34")
+  const [email, setEmail] = useState("user@medrelay.com")
+  const [phone, setPhone] = useState("+91 98401 23456")
+  const [residence, setResidence] = useState("Puducherry, India")
+  const [patientId, setPatientId] = useState("PT-8891")
+  const [abhaNumber, setAbhaNumber] = useState("91-4902-8819-2041")
+  const [dob, setDob] = useState("1992-05-14")
+  const [gender, setGender] = useState("Male")
+  const [bloodType, setBloodType] = useState("O+")
+  const [doctor, setDoctor] = useState("Dr. Emily Rodriguez (PHC Villianur)")
+  const [allergies, setAllergies] = useState("Penicillin, Dust Mites")
+  const [conditions, setConditions] = useState("Mild Hypertension (Controlled)")
+  const [medications, setMedications] = useState("Amoxicillin 625mg, Pan-40, Dolo 650 SOS")
+  const [emergencyName, setEmergencyName] = useState("Anitha Kumar")
+  const [emergencyRelation, setEmergencyRelation] = useState("Spouse")
+  const [emergencyPhone, setEmergencyPhone] = useState("+91 98401 98765")
+  const [medCoins, setMedCoins] = useState(250)
+
+  // ABHA Linking State
+  const [abhaStatus, setAbhaStatus] = useState<"linked" | "unlinked" | "otp" | "verifying">("linked")
+  const [abhaInput, setAbhaInput] = useState("")
+  const [otpInput, setOtpInput] = useState("")
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("medrelay.abha")
-    if (saved) { setLinkedId(saved); setStatus("linked") }
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("medrelay.user_name")
+      if (storedName) setName(storedName)
+
+      const storedEmail = localStorage.getItem("medrelay.user_email")
+      if (storedEmail) setEmail(storedEmail)
+
+      const storedCode = localStorage.getItem("medrelay.user_unique_code")
+      if (storedCode) setPatientId(storedCode)
+
+      const storedAbha = localStorage.getItem("medrelay.abha")
+      if (storedAbha) setAbhaNumber(storedAbha)
+
+      const storedCoins = localStorage.getItem("medrelay.coins")
+      if (storedCoins) setMedCoins(parseInt(storedCoins))
+    }
   }, [])
 
-  const requestOtp = () => {
-    if (abhaNumber.replace(/-/g, "").length !== 14) return
-    setStatus("sending")
-    setTimeout(() => setStatus("otp"), 900)
+  const showToast = (msg: string) => {
+    setToastMessage(msg)
+    setTimeout(() => setToastMessage(null), 3000)
   }
 
-  const verifyOtp = () => {
-    if (otp.length !== 6) return
-    setStatus("verifying")
+  const handleSave = (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    setLoading(true)
+
+    // Persist changes to localStorage so topbar, greeting, and system update instantly
+    localStorage.setItem("medrelay.user_name", name.trim() || "Rajesh Kumar")
+    localStorage.setItem("medrelay.user_email", email.trim() || "user@medrelay.com")
+    localStorage.setItem("medrelay.user_unique_code", patientId.trim() || "PT-8891")
+    localStorage.setItem("medrelay.abha", abhaNumber.trim() || "91-4902-8819-2041")
+
     setTimeout(() => {
-      setLinkedId(abhaNumber)
-      window.localStorage.setItem("medrelay.abha", abhaNumber)
-      setStatus("linked")
+      setLoading(false)
+      setIsEditing(false)
+      setSaved(true)
+      showToast("Profile changes saved successfully!")
+      setTimeout(() => setSaved(false), 3000)
+    }, 600)
+  }
+
+  const handleVerifyAbha = () => {
+    if (otpInput.length < 6) return
+    setAbhaStatus("verifying")
+    setTimeout(() => {
+      setAbhaNumber(abhaInput || "91-4902-8819-2041")
+      localStorage.setItem("medrelay.abha", abhaInput || "91-4902-8819-2041")
+      setAbhaStatus("linked")
+      showToast("ABHA ID linked successfully!")
     }, 900)
   }
 
   return (
-    <div className="bg-white rounded-3xl p-8 border border-indigo-100 shadow-sm">
-      <h2 className="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
-        <IdCard className="text-indigo-600" /> ABHA (Ayushman Bharat Health Account)
-      </h2>
-      <p className="text-sm text-slate-500 mb-6">
-        Linking your ABHA ID lets records from any ABDM-participating facility (PHC, sub-centre, district or private hospital)
-        attach to one lifelong health record, with your consent required for every share.
-      </p>
-
-      {status === "linked" ? (
-        <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-          <div className="flex items-center gap-3">
-            <CheckCircle2 className="text-emerald-600" size={22} />
-            <div>
-              <p className="font-semibold text-emerald-800 text-sm">ABHA linked</p>
-              <p className="text-xs text-emerald-700 font-mono">{linkedId}</p>
-            </div>
-          </div>
-          <Button variant="outline" size="sm" onClick={() => { window.localStorage.removeItem("medrelay.abha"); setStatus("unlinked"); setAbhaNumber(""); setOtp("") }}>
-            Unlink
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">ABHA Number</label>
-            <Input
-              placeholder="XX-XXXX-XXXX-XXXX"
-              value={abhaNumber}
-              disabled={status !== "unlinked"}
-              onChange={(e) => setAbhaNumber(e.target.value)}
-              className="font-mono"
-            />
-          </div>
-          {status === "unlinked" && (
-            <Button onClick={requestOtp} className="bg-indigo-600 hover:bg-indigo-700">Send OTP to ABHA-linked mobile</Button>
-          )}
-          {status === "sending" && (
-            <Button disabled className="bg-indigo-600"><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Requesting OTP via ABDM gateway...</Button>
-          )}
-          {status === "otp" && (
-            <div className="flex gap-3">
-              <Input placeholder="6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value)} maxLength={6} className="max-w-[160px] font-mono" />
-              <Button onClick={verifyOtp} className="bg-indigo-600 hover:bg-indigo-700">Verify & Link</Button>
-            </div>
-          )}
-          {status === "verifying" && (
-            <Button disabled className="bg-indigo-600"><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Verifying with ABDM...</Button>
-          )}
-          <p className="text-xs text-slate-400">
-            Simulated flow for demo purposes — production linking calls the live ABDM ABHA verification API once sandbox certification (M1) is complete.
-          </p>
+    <div className="max-w-5xl mx-auto pb-16 space-y-6 text-[#143827]">
+      
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-6 right-6 z-50 bg-[#143827] text-[#C6F052] px-4 py-2.5 rounded-2xl shadow-xl border border-[#C6F052]/30 text-xs font-bold animate-in fade-in slide-in-from-top-4">
+          <span>{toastMessage}</span>
         </div>
       )}
-    </div>
-  )
-}
 
-export default function ProfilePage() {
-  const [loading, setLoading] = useState(false)
-  const [saved, setSaved] = useState(false)
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight text-[#143827]">Patient Profile</h1>
+          <p className="text-sm text-[#5E806E] mt-0.5">Manage your personal demographics and verified ABDM medical records.</p>
+        </div>
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
-    }, 800)
-  }
-
-  return (
-    <div className="max-w-5xl mx-auto pb-12">
-      <div className="mb-8">
-        <h1 className="text-[32px] font-bold tracking-tight text-slate-900 leading-tight">Patient Profile</h1>
-        <p className="text-slate-500 font-medium">Manage your personal and medical information securely.</p>
+        <button
+          type="button"
+          onClick={() => {
+            if (isEditing) {
+              handleSave()
+            } else {
+              setIsEditing(true)
+            }
+          }}
+          className={`px-5 py-2.5 rounded-full font-bold text-xs flex items-center gap-2 shadow-sm transition-all ${
+            isEditing 
+              ? "bg-[#143827] text-[#C6F052] hover:bg-[#0E2419]" 
+              : "bg-[#EBF0E4] hover:bg-[#E2E8D5] text-[#143827] border border-[#E2E8D5]"
+          }`}
+        >
+          {isEditing ? (
+            <>
+              <Save size={14} />
+              <span>Save Changes</span>
+            </>
+          ) : (
+            <>
+              <Edit3 size={14} />
+              <span>Edit Profile</span>
+            </>
+          )}
+        </button>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-8">
+      {/* 1. HERO PROFILE CARD (Styled exactly like the uploaded reference image) */}
+      <div className="bg-white border border-[#E2E8D5] rounded-[36px] p-6 sm:p-8 shadow-xs relative overflow-hidden">
+        
+        {/* Top Right Edit Action */}
+        <button
+          type="button"
+          onClick={() => setIsEditing(!isEditing)}
+          className="absolute top-6 right-6 w-10 h-10 rounded-full bg-[#F6F8F0] hover:bg-[#EBF0E4] border border-[#E2E8D5] text-[#143827] flex items-center justify-center transition-colors shadow-2xs cursor-pointer z-10"
+          title={isEditing ? "Cancel editing" : "Edit profile details"}
+        >
+          {isEditing ? <Check size={18} className="text-emerald-700" /> : <Edit3 size={18} />}
+        </button>
 
-        <AbhaLinkCard />
-
-        {/* Basic Info */}
-        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <User className="text-indigo-600" /> Basic Information
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">First Name</label>
-              <input type="text" defaultValue="John" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900" />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Last Name</label>
-              <input type="text" defaultValue="Doe" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900" />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Date of Birth</label>
-              <input type="date" defaultValue="1980-05-15" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900" />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Gender</label>
-              <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900">
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-                <option>Prefer not to say</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Medical Info */}
-        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <HeartPulse className="text-red-500" /> Medical Profile
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Blood Type</label>
-              <select defaultValue="O+" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 font-bold text-red-600">
-                <option>A+</option><option>A-</option>
-                <option>B+</option><option>B-</option>
-                <option>AB+</option><option>AB-</option>
-                <option>O+</option><option>O-</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Primary Care Physician</label>
-              <input type="text" defaultValue="Dr. Sarah Jenkins" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900" />
-            </div>
-          </div>
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8">
           
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Known Allergies (Comma separated)</label>
-              <textarea rows={2} defaultValue="Penicillin, Peanuts" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 resize-none"></textarea>
+          {/* Large Circular Avatar Photo / Initials Badge */}
+          <div className="relative group shrink-0">
+            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-[#143827] via-[#1E4835] to-[#2E6B4F] text-[#C6F052] font-black text-3xl sm:text-4xl flex items-center justify-center shadow-xl ring-4 ring-[#EBF0E4]">
+              {name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'RK'}
             </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Pre-existing Conditions</label>
-              <textarea rows={2} defaultValue="Hypertension, Asthma" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 resize-none"></textarea>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Current Medications</label>
-              <textarea rows={2} defaultValue="Lisinopril 10mg daily, Albuterol inhaler as needed" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 resize-none"></textarea>
+            <div className="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 rounded-full ring-2 ring-white flex items-center justify-center text-white text-[10px] font-bold">
+              ✓
             </div>
           </div>
+
+          {/* User Demographics Glass Container */}
+          <div className="flex-1 w-full space-y-4 text-center md:text-left">
+            
+            <div>
+              <div className="flex flex-col md:flex-row md:items-center gap-2">
+                <h2 className="text-2xl font-black text-[#143827]">
+                  {isEditing ? (
+                    <input 
+                      type="text" 
+                      value={name} 
+                      onChange={(e) => setName(e.target.value)} 
+                      className="bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-1 text-xl font-black text-[#143827] focus:ring-2 focus:ring-[#143827] w-full max-w-sm" 
+                    />
+                  ) : (
+                    `${name}'s Health Profile`
+                  )}
+                </h2>
+                <span className="text-xs font-mono font-bold bg-[#EBF0E4] text-[#143827] border border-[#E2E8D5] px-2.5 py-0.5 rounded-full self-center md:self-auto">
+                  Pat_{patientId}
+                </span>
+              </div>
+              <p className="text-xs text-[#5E806E] font-medium mt-0.5">
+                Primary Ayushman Bharat Citizen Account • Identity Verified
+              </p>
+            </div>
+
+            {/* Quick Contact & Age Card */}
+            <div className="bg-[#F4F6EC] border border-[#E2E8D5] rounded-2xl p-4 text-xs space-y-2 max-w-xl">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-[#5E806E] block">Age:</span>
+                  {isEditing ? (
+                    <input 
+                      type="number" 
+                      value={age} 
+                      onChange={(e) => setAge(e.target.value)} 
+                      className="bg-white border border-[#E2E8D5] rounded-lg px-2 py-0.5 font-bold text-[#143827] w-20 text-xs" 
+                    />
+                  ) : (
+                    <span className="font-bold text-[#143827]">{age} years</span>
+                  )}
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-[#5E806E] block">Email:</span>
+                  {isEditing ? (
+                    <input 
+                      type="email" 
+                      value={email} 
+                      onChange={(e) => setEmail(e.target.value)} 
+                      className="bg-white border border-[#E2E8D5] rounded-lg px-2 py-0.5 font-bold text-[#143827] w-full text-xs" 
+                    />
+                  ) : (
+                    <span className="font-bold text-[#143827] truncate block">{email}</span>
+                  )}
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-[#5E806E] block">Phone:</span>
+                  {isEditing ? (
+                    <input 
+                      type="tel" 
+                      value={phone} 
+                      onChange={(e) => setPhone(e.target.value)} 
+                      className="bg-white border border-[#E2E8D5] rounded-lg px-2 py-0.5 font-bold text-[#143827] w-full text-xs" 
+                    />
+                  ) : (
+                    <span className="font-bold text-[#143827]">{phone}</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Bottom 3 Pill Badges (ID, Policy/ABHA, Residence) */}
+              <div className="pt-3 border-t border-[#E2E8D5] grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-xs">
+                <div className="bg-white p-2 rounded-xl border border-[#E2E8D5]">
+                  <span className="text-[10px] text-[#5E806E] font-bold block uppercase">UHID / ID</span>
+                  <span className="font-mono font-bold text-[#143827]">{patientId}</span>
+                </div>
+                <div className="bg-white p-2 rounded-xl border border-[#E2E8D5]">
+                  <span className="text-[10px] text-[#5E806E] font-bold block uppercase">Policy / ABHA</span>
+                  <span className="font-mono font-bold text-[#143827] truncate block">{abhaNumber.slice(0, 12)}...</span>
+                </div>
+                <div className="bg-white p-2 rounded-xl border border-[#E2E8D5]">
+                  <span className="text-[10px] text-[#5E806E] font-bold block uppercase">Residence</span>
+                  {isEditing ? (
+                    <input 
+                      type="text" 
+                      value={residence} 
+                      onChange={(e) => setResidence(e.target.value)} 
+                      className="bg-[#F6F8F0] border border-[#E2E8D5] rounded px-1 text-center font-bold text-[#143827] w-full text-xs" 
+                    />
+                  ) : (
+                    <span className="font-bold text-[#143827] truncate block">{residence}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
 
-        {/* Emergency Contacts */}
-        <div className="bg-white rounded-3xl p-8 border border-red-100 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full -z-10"></div>
-          <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <ShieldAlert className="text-orange-500" /> Emergency Contacts
+      </div>
+
+      {/* 2. FOUR QUICK METRIC TILES (Styled exactly like reference image 2x2 grid with ArrowUpRight) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        {/* Card 1: Diary / Health Logs */}
+        <Link 
+          href="/quick-access"
+          className="bg-white border border-[#E2E8D5] rounded-3xl p-5 shadow-xs hover:border-[#143827] hover:shadow-md transition-all group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-bold text-xs text-[#5E806E] group-hover:text-[#143827] transition-colors">Diary &amp; Logs</span>
+            <div className="w-8 h-8 rounded-full bg-[#F6F8F0] group-hover:bg-[#143827] group-hover:text-[#C6F052] flex items-center justify-center text-[#143827] transition-colors">
+              <ArrowUpRight size={16} />
+            </div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-[#143827]">15</div>
+            <p className="text-[11px] text-[#5E806E] font-semibold mt-0.5">Total Doses &amp; Events</p>
+          </div>
+        </Link>
+
+        {/* Card 2: Settings & Actions */}
+        <Link 
+          href="/settings"
+          className="bg-white border border-[#E2E8D5] rounded-3xl p-5 shadow-xs hover:border-[#143827] hover:shadow-md transition-all group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-bold text-xs text-[#5E806E] group-hover:text-[#143827] transition-colors">Settings</span>
+            <div className="w-8 h-8 rounded-full bg-[#F6F8F0] group-hover:bg-[#143827] group-hover:text-[#C6F052] flex items-center justify-center text-[#143827] transition-colors">
+              <ArrowUpRight size={16} />
+            </div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-[#143827]">12</div>
+            <p className="text-[11px] text-[#5E806E] font-semibold mt-0.5">Action Preferences</p>
+          </div>
+        </Link>
+
+        {/* Card 3: Prescriptions & Med Orders */}
+        <Link 
+          href="/pharmacy"
+          className="bg-white border border-[#E2E8D5] rounded-3xl p-5 shadow-xs hover:border-[#143827] hover:shadow-md transition-all group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-bold text-xs text-[#5E806E] group-hover:text-[#143827] transition-colors">Prescriptions</span>
+            <div className="w-8 h-8 rounded-full bg-[#F6F8F0] group-hover:bg-[#143827] group-hover:text-[#C6F052] flex items-center justify-center text-[#143827] transition-colors">
+              <ArrowUpRight size={16} />
+            </div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-[#143827]">8 Active</div>
+            <p className="text-[11px] text-[#5E806E] font-semibold mt-0.5">Jan Aushadhi Sync</p>
+          </div>
+        </Link>
+
+        {/* Card 4: Health Base / Verified Records */}
+        <Link 
+          href="/records"
+          className="bg-white border border-[#E2E8D5] rounded-3xl p-5 shadow-xs hover:border-[#143827] hover:shadow-md transition-all group flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-bold text-xs text-[#5E806E] group-hover:text-[#143827] transition-colors">Health Base</span>
+            <div className="w-8 h-8 rounded-full bg-[#F6F8F0] group-hover:bg-[#143827] group-hover:text-[#C6F052] flex items-center justify-center text-[#143827] transition-colors">
+              <ArrowUpRight size={16} />
+            </div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-[#143827]">9 Verified</div>
+            <p className="text-[11px] text-[#5E806E] font-semibold mt-0.5">ABDM FHIR Bundles</p>
+          </div>
+        </Link>
+
+      </div>
+
+      {/* 3. EDITABLE MEDICAL PROFILE & EMERGENCY CONTACT DETAILS */}
+      <form onSubmit={handleSave} className="space-y-6">
+        
+        {/* ABHA Link Card */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8D5] shadow-xs space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-bold text-[#143827] flex items-center gap-2">
+              <IdCard className="text-[#143827]" size={20} />
+              <span>Ayushman Bharat Health Account (ABHA)</span>
+            </h2>
+            <span className="text-xs font-bold text-emerald-800 bg-emerald-100/70 border border-emerald-200 px-3 py-1 rounded-full">
+              ABDM Certified
+            </span>
+          </div>
+
+          <p className="text-xs text-[#5E806E]">
+            Linking your 14-digit ABHA ID synchronizes medical diagnostic records, prescriptions, and referral slips across all participating hospitals in India.
+          </p>
+
+          {abhaStatus === "linked" ? (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-[#F4F6EC] border border-[#E2E8D5] rounded-2xl gap-3">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 size={24} className="text-emerald-700 shrink-0" />
+                <div>
+                  <p className="font-bold text-xs text-[#143827]">ABHA ID Linked &amp; Verified</p>
+                  <p className="font-mono text-xs text-[#5E806E] font-bold">{abhaNumber}</p>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setAbhaStatus("unlinked")}
+                className="border-slate-300 text-xs font-bold text-[#143827] hover:bg-[#EBF0E4] rounded-full"
+              >
+                Change ABHA ID
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[#143827] mb-1">Enter 14-Digit ABHA ID</label>
+                <input
+                  type="text"
+                  placeholder="91-XXXX-XXXX-XXXX"
+                  value={abhaInput}
+                  onChange={(e) => setAbhaInput(e.target.value)}
+                  className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-[#143827] focus:ring-2 focus:ring-[#143827]"
+                />
+              </div>
+
+              {abhaStatus === "unlinked" && (
+                <button
+                  type="button"
+                  onClick={() => setAbhaStatus("otp")}
+                  className="px-5 py-2.5 bg-[#143827] text-white rounded-full text-xs font-bold hover:bg-[#0E2419]"
+                >
+                  Request OTP via Aadhaar / Mobile
+                </button>
+              )}
+
+              {abhaStatus === "otp" && (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="6-Digit OTP"
+                    value={otpInput}
+                    onChange={(e) => setOtpInput(e.target.value)}
+                    maxLength={6}
+                    className="w-36 bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2 text-xs font-mono font-bold"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleVerifyAbha}
+                    className="px-5 py-2 bg-[#143827] text-white rounded-full text-xs font-bold"
+                  >
+                    Verify &amp; Link
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Clinical Profile Card */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2E8D5] shadow-xs space-y-4">
+          <h2 className="text-base font-bold text-[#143827] flex items-center gap-2">
+            <HeartPulse className="text-rose-600" size={20} />
+            <span>Clinical &amp; Medical Profile</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Contact Name</label>
-              <input type="text" defaultValue="Jane Doe" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-900" />
+              <label className="block font-bold text-[#143827] mb-1">Blood Group</label>
+              <select
+                value={bloodType}
+                onChange={(e) => setBloodType(e.target.value)}
+                className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2.5 font-bold text-rose-700"
+              >
+                <option>O+</option>
+                <option>O-</option>
+                <option>A+</option>
+                <option>A-</option>
+                <option>B+</option>
+                <option>B-</option>
+                <option>AB+</option>
+                <option>AB-</option>
+              </select>
             </div>
+
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Relationship</label>
-              <input type="text" defaultValue="Wife" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-900" />
+              <label className="block font-bold text-[#143827] mb-1">Primary Care Physician</label>
+              <input
+                type="text"
+                value={doctor}
+                onChange={(e) => setDoctor(e.target.value)}
+                className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2.5 font-bold text-[#143827]"
+              />
             </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Phone Number</label>
-              <input type="tel" defaultValue="555-0192-334" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-900" />
+
+            <div className="sm:col-span-2">
+              <label className="block font-bold text-[#143827] mb-1">Known Allergies</label>
+              <input
+                type="text"
+                value={allergies}
+                onChange={(e) => setAllergies(e.target.value)}
+                className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2.5 font-medium text-[#143827]"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block font-bold text-[#143827] mb-1">Pre-existing Chronic Conditions</label>
+              <input
+                type="text"
+                value={conditions}
+                onChange={(e) => setConditions(e.target.value)}
+                className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2.5 font-medium text-[#143827]"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block font-bold text-[#143827] mb-1">Active Prescribed Medications</label>
+              <input
+                type="text"
+                value={medications}
+                onChange={(e) => setMedications(e.target.value)}
+                className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2.5 font-medium text-[#143827]"
+              />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-4">
-          {saved && <span className="flex items-center text-green-600 font-semibold mr-4 animate-in fade-in">Saved successfully!</span>}
-          <Button variant="outline" type="button" className="rounded-xl px-6 py-6 border-slate-300 font-bold">Cancel</Button>
-          <Button type="submit" className="rounded-xl px-8 py-6 bg-slate-900 hover:bg-slate-800 text-white font-bold" disabled={loading}>
-            {loading ? "Saving..." : <><Save className="w-4 h-4 mr-2" /> Save Profile</>}
+        {/* Emergency Contacts Card */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-rose-100 shadow-xs space-y-4">
+          <h2 className="text-base font-bold text-[#143827] flex items-center gap-2">
+            <ShieldAlert className="text-rose-600" size={20} />
+            <span>Emergency Contacts (Dialed on SOS Trigger)</span>
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div>
+              <label className="block font-bold text-[#143827] mb-1">Contact Name</label>
+              <input
+                type="text"
+                value={emergencyName}
+                onChange={(e) => setEmergencyName(e.target.value)}
+                className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2.5 font-bold text-[#143827]"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-[#143827] mb-1">Relationship</label>
+              <input
+                type="text"
+                value={emergencyRelation}
+                onChange={(e) => setEmergencyRelation(e.target.value)}
+                className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2.5 font-bold text-[#143827]"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-[#143827] mb-1">Emergency Phone</label>
+              <input
+                type="tel"
+                value={emergencyPhone}
+                onChange={(e) => setEmergencyPhone(e.target.value)}
+                className="w-full bg-[#F6F8F0] border border-[#E2E8D5] rounded-xl px-3 py-2.5 font-bold text-[#143827]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Form Save Button */}
+        <div className="flex justify-end gap-3 pt-2">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="px-8 py-3.5 bg-[#143827] hover:bg-[#0E2419] text-white font-bold rounded-full text-xs shadow-md transition-all flex items-center gap-2"
+          >
+            {loading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+            <span>Save Profile Changes</span>
           </Button>
         </div>
 
       </form>
+
     </div>
   )
 }

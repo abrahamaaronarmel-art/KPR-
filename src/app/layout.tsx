@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MedRelay - Rural Health Network & Emergency AI Triage",
-  description: "MedRelay: Intelligent rural healthcare coordination, ABDM ABHA integration, emergency dispatch, and multilingual voice triage platform.",
+  title: "MedRelay",
+  description: "MedRelay: Intelligent rural healthcare coordination, ABDM ABHA integration, emergency triage, and teleconsultation platform.",
   icons: {
     icon: "/medrelay-icon.svg",
     shortcut: "/medrelay-icon.svg",
