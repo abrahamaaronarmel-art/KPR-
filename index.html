@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Our Little World ❤️ - Madhumitha & Barani</title>
+  <meta name="theme-color" content="#2A0618">
+  <link rel="icon" href="/images/photo5.jpg">
+  <link rel="apple-touch-icon" href="/images/photo5.jpg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #240515;
+      color: #FFF0F5;
+      overflow-x: hidden;
+      touch-action: pan-y;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-serif { font-family: 'Playfair Display', serif; }
+    
+    /* Cinematic Ken-Burns Photo Animation in Background */
+    @keyframes kenBurnsFade {
+      0% { opacity: 0; transform: scale(1) translate(0, 0); }
+      15% { opacity: 0.35; }
+      85% { opacity: 0.35; }
+      100% { opacity: 0; transform: scale(1.12) translate(-1%, -1%); }
+    }
+    
+    .bg-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center 30%;
+      opacity: 0;
+      animation: kenBurnsFade 25s infinite ease-in-out;
+      filter: contrast(110%) saturate(120%);
+    }
+
+    .slide-1 { background-image: url('/images/photo1.jpg'); animation-delay: 0s; }
+    .slide-2 { background-image: url('/images/photo2.jpg'); animation-delay: 5s; }
+    .slide-3 { background-image: url('/images/photo3.jpg'); animation-delay: 10s; }
+    .slide-4 { background-image: url('/images/photo4.jpg'); animation-delay: 15s; }
+    .slide-5 { background-image: url('/images/photo5.jpg'); animation-delay: 20s; }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-float { animation: floatSlow 3.5s infinite ease-in-out; }
+
+    @keyframes pinkPulse {
+      0%, 100% { box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.7); }
+    }
+    .pink-glow { animation: pinkPulse 2.5s infinite ease-in-out; }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden select-none pb-12">
+
+  <!-- 1. LIVE ANIMATED COUPLE PHOTO VIDEO BACKGROUND (Requested by user!) -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <!-- 5 Couple Photos Cross-Fading with Slow Cinematic Ken-Burns Motion -->
+    <div class="bg-slide slide-1"></div>
+    <div class="bg-slide slide-2"></div>
+    <div class="bg-slide slide-3"></div>
+    <div class="bg-slide slide-4"></div>
+    <div class="bg-slide slide-5"></div>
+
+    <!-- Soft Dreamy Pink Gradient Overlay so text is super crisp & readable -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[#2A0618]/90 via-[#400B26]/85 to-[#1E0412]/95 mix-blend-multiply"></div>
+    <div class="absolute inset-0 bg-gradient-to-tr from-pink-900/30 via-transparent to-rose-900/30"></div>
+  </div>
+
+  <!-- 2. Falling Rose Petals & Floating Pink Hearts Canvas -->
+  <canvas id="loveCanvas" class="fixed inset-0 pointer-events-none z-10"></canvas>
+
+  <!-- 3. Glowing Pink Fairy Lights Garland across the top -->
+  <div class="fixed top-0 inset-x-0 h-8 pointer-events-none z-30 flex justify-between px-3 overflow-hidden opacity-90">
+    <script>
+      for(let i=0; i<16; i++) {
+        document.write(`
+          <div class="flex flex-col items-center">
+            <div class="w-[1px] h-2.5 bg-pink-300/40"></div>
+            <div class="w-2.5 h-3.5 rounded-full bg-gradient-to-b from-pink-200 via-rose-300 to-pink-500 shadow-[0_0_12px_rgba(244,114,182,0.9)] animate-pulse" style="animation-duration:${1.5 + (i%4)*0.3}s"></div>
+          </div>
+        `);
+      }
+    </script>
+  </div>
+
+  <!-- 4. Cute Floating Couple Badges (Mobile-friendly docked at bottom) -->
+  <aside class="fixed left-2.5 sm:left-6 bottom-4 sm:bottom-6 z-40 flex flex-col items-center animate-float">
+    <div onclick="showToast('Barani: Madhu, nee sirichaa dhaan en ulagam bright aagum! 🌸')" class="cursor-pointer group">
+      <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gradient-to-tr from-pink-300 via-rose-500 to-pink-200 shadow-[0_0_20px_rgba(236,72,153,0.7)] relative">
+        <img src="/images/photo1.jpg" alt="Barani & Madhu" class="w-full h-full object-cover rounded-full">
+        <span class="absolute -bottom-1 -right-1 bg-rose-500 text-white p-0.5 sm:p-1 rounded-full text-[9px] sm:text-[10px] shadow-md animate-pulse">❤️</span>
+      </div>
+      <div class="mt-1 bg-pink-950/80 backdrop-blur-md px-2 py-0.5 rounded-full border border-pink-400/40 text-[9px] sm:text-[10px] font-semibold text-pink-200 text-center shadow-md">
+        Barani ❤️ Madhu
+      </div>
+    </div>
+  </aside>
+
+  <aside class="fixed right-2.5 sm:right-6 bottom-4 sm:bottom-6 z-40 flex flex-col items-center animate-float" style="animation-delay: 1.5s;">
+    <div onclick="showToast('Madhumitha: Princess Tiara Mode On! 👑 En Thangoooo Pula! ✨')" class="cursor-pointer group">
+      <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full p-[2px] bg-gradient-to-tr from-amber-300 via-pink-500 to-rose-300 shadow-[0_0_20px_rgba(244,63,94,0.7)] relative">
+        <img src="/images/photo5.jpg" alt="Thangoooo Pula" class="w-full h-full object-cover rounded-full">
+        <span class="absolute -bottom-1 -left-1 bg-pink-500 text-white p-0.5 sm:p-1 rounded-full text-[9px] sm:text-[10px] shadow-md">👑</span>
+      </div>
+      <div class="mt-1 bg-pink-950/80 backdrop-blur-md px-2 py-0.5 rounded-full border border-pink-400/40 text-[9px] sm:text-[10px] font-semibold text-pink-200 text-center shadow-md">
+        Thangoooo Pula ✨
+      </div>
+    </div>
+  </aside>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-[#3B0A22]/95 border border-pink-400/60 px-4 py-2.5 rounded-2xl shadow-2xl text-center max-w-[90vw] text-xs sm:text-sm text-pink-100 font-medium hidden transition-all"></div>
+
+  <!-- TOP HEADER (Clean Mobile Layout in Pink) -->
+  <header class="relative z-30 w-full px-3 sm:px-6 py-3 flex items-center justify-between border-b border-pink-800/40 bg-[#2A0618]/80 backdrop-blur-md">
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <span class="text-lg sm:text-2xl animate-pulse">💖</span>
+      <div>
+        <h1 class="text-[11px] sm:text-xs font-bold tracking-widest uppercase text-pink-300">Our Little World</h1>
+        <p class="text-[9px] sm:text-[11px] text-pink-300/80">Madhumitha & Barani</p>
+      </div>
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="flex items-center gap-1.5 sm:gap-2 bg-pink-950/70 px-2.5 sm:px-3 py-1 rounded-full border border-pink-700/50">
+      <span class="text-[10px] sm:text-xs font-semibold text-pink-200">
+        Surprise <span id="stageNum" class="text-pink-400 font-bold">1</span>/5
+      </span>
+      <div class="flex gap-1" id="dotsContainer">
+        <span class="w-4 sm:w-5 h-2 rounded-full bg-pink-400 dot"></span>
+        <span class="w-2 h-2 rounded-full bg-pink-950 dot"></span>
+        <span class="w-2 h-2 rounded-full bg-pink-950 dot"></span>
+        <span class="w-2 h-2 rounded-full bg-pink-950 dot"></span>
+        <span class="w-2 h-2 rounded-full bg-pink-950 dot"></span>
+      </div>
+    </div>
+
+    <!-- Music toggle -->
+    <div>
+      <button onclick="toggleMusic()" id="musicBtn" class="flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-md hover:scale-105 transition-all">
+        🎵 <span class="hidden sm:inline">Play</span> Melody
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN EXPERIENCE CONTAINER (Mobile-First Neat Padding) -->
+  <main class="relative z-20 max-w-lg mx-auto px-4 py-6 sm:py-8 min-h-[calc(100vh-70px)] flex flex-col justify-center">
+
+    <!-- ================= STAGE 1: THE SECRET & SURPRISE QUIZ ================= -->
+    <section id="stage1" class="flex flex-col items-center text-center space-y-5">
+      <div class="space-y-1.5">
+        <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[11px] font-semibold bg-pink-950/80 text-pink-300 border border-pink-700/50">
+          ✨ Private Love Journey
+        </span>
+        <h2 class="text-xl sm:text-3xl font-serif font-bold text-pink-100 leading-tight">
+          “Hey, someone created a little surprise just for you…”
+        </h2>
+        <p class="text-xs sm:text-base text-pink-200/90 font-light">
+          Madhumitha, this little world belongs to you. ❤️
+        </p>
+      </div>
+
+      <!-- Glowing 3D Pink Envelope -->
+      <div class="w-64 sm:w-72 h-44 sm:h-48 rounded-2xl bg-gradient-to-br from-[#4A0E2B] via-[#611239] to-[#33081C] border-2 border-pink-400/50 shadow-[0_0_35px_rgba(244,114,182,0.4)] flex flex-col items-center justify-center p-4 relative pink-glow">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 via-rose-500 to-amber-200 p-1 shadow-lg flex items-center justify-center animate-pulse">
+          <div class="w-full h-full rounded-full bg-[#3B0A20] flex items-center justify-center text-xl sm:text-2xl">❤️</div>
+        </div>
+        <p class="mt-2.5 text-xs sm:text-sm font-bold text-pink-200">Sealed with Love by Barani</p>
+        <p class="text-[10px] text-pink-300/80 italic">“My Thangoooo Pula”</p>
+      </div>
+
+      <!-- Love Quiz Card in Pink -->
+      <div class="w-full bg-[#33081E]/90 border border-pink-400/40 rounded-2xl p-4 sm:p-5 text-left space-y-2.5 shadow-xl">
+        <h3 class="text-xs sm:text-sm font-bold text-pink-100 flex items-center gap-1.5">
+          <span>🎁</span> Answer this tiny question to unlock:
+        </h3>
+        <p class="text-[11px] sm:text-xs text-pink-200 leading-relaxed">
+          Who in this universe loves you more than anything and calls you his <b class="text-pink-300">“Thangoooo Pula”</b>? 💖
+        </p>
+
+        <div class="space-y-2 pt-1">
+          <button onclick="answerQuiz('A')" class="w-full text-left px-3 py-2 rounded-xl text-xs bg-pink-950/70 border border-pink-700/50 hover:bg-pink-900/60 text-pink-100 transition-all flex justify-between items-center">
+            <span>En Barani thaan ❤️ (100% Correct!)</span> <span>❤️</span>
+          </button>
+          <button onclick="answerQuiz('B')" class="w-full text-left px-3 py-2 rounded-xl text-xs bg-pink-950/70 border border-pink-700/50 hover:bg-pink-900/60 text-pink-100 transition-all flex justify-between items-center">
+            <span>Obviously Barani! En vaalutharam-ah thaanga vera yaaru? 😜</span> <span>😜</span>
+          </button>
+          <button onclick="answerQuiz('C')" class="w-full text-left px-3 py-2 rounded-xl text-xs bg-pink-950/70 border border-pink-700/50 hover:bg-pink-900/60 text-pink-100 transition-all flex justify-between items-center">
+            <span>My handsome Barani forever and ever 💍</span> <span>💍</span>
+          </button>
+        </div>
+
+        <div id="quizAlert" class="hidden p-2.5 rounded-xl bg-gradient-to-r from-pink-800/90 to-rose-800/90 border border-pink-400/50 text-[11px] sm:text-xs text-pink-100 font-medium"></div>
+      </div>
+
+      <button onclick="goToStage(2)" class="w-full sm:w-auto px-8 py-3 rounded-full font-serif font-bold text-sm sm:text-base bg-gradient-to-r from-pink-600 via-rose-500 to-pink-500 text-white shadow-[0_0_25px_rgba(244,63,94,0.6)] active:scale-95 transition-transform flex items-center justify-center gap-2">
+        Unlock Your Surprise 💌
+      </button>
+    </section>
+
+    <!-- ================= STAGE 2: THREE MYSTERY CARDS ================= -->
+    <section id="stage2" class="hidden flex flex-col items-center text-center space-y-5">
+      <div class="space-y-1">
+        <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[11px] font-semibold bg-pink-950/80 text-pink-300 border border-pink-700/50">
+          Clue 1 of Our Journey 💗
+        </span>
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-pink-100">
+          “Before you continue… do you know how special you are?”
+        </h2>
+        <p class="text-xs text-pink-200">Tap each card to reveal Barani's heartfelt thoughts.</p>
+      </div>
+
+      <!-- 3 Pink Flip Cards -->
+      <div class="grid grid-cols-1 gap-3 w-full my-1">
+        <!-- Card 1 -->
+        <div onclick="flipCard('card1')" id="card1" class="cursor-pointer rounded-2xl bg-gradient-to-br from-[#400B26] to-[#260516] border-2 border-pink-500/40 p-4 text-center transition-all hover:border-pink-300">
+          <div id="card1-front">
+            <div class="text-2xl mb-1">📸</div>
+            <h3 class="font-serif font-bold text-sm sm:text-base text-pink-100">A Little Memory 📸</h3>
+            <p class="text-[11px] text-pink-300 mt-1">Tap to reveal memory ✨</p>
+          </div>
+          <div id="card1-back" class="hidden text-xs text-pink-100 leading-relaxed font-light py-2">
+            “From the very first day we started talking, every single second with you became my favorite memory. Your laughter is my happiest sound track. 🌸”
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div onclick="flipCard('card2')" id="card2" class="cursor-pointer rounded-2xl bg-gradient-to-br from-[#400B26] to-[#260516] border-2 border-pink-500/40 p-4 text-center transition-all hover:border-pink-300">
+          <div id="card2-front">
+            <div class="text-2xl mb-1">💌</div>
+            <h3 class="font-serif font-bold text-sm sm:text-base text-pink-100">A Secret Message 💌</h3>
+            <p class="text-[11px] text-pink-300 mt-1">Tap to open secret 💌</p>
+          </div>
+          <div id="card2-back" class="hidden text-xs text-pink-100 leading-relaxed font-light py-2">
+            “En Thangoooo Pula, no matter how busy the world gets or how tough days feel, remember that my heart always has a permanent home for you. You are my safe place. 💗”
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div onclick="flipCard('card3')" id="card3" class="cursor-pointer rounded-2xl bg-gradient-to-br from-[#400B26] to-[#260516] border-2 border-pink-500/40 p-4 text-center transition-all hover:border-pink-300">
+          <div id="card3-front">
+            <div class="text-2xl mb-1">🎁</div>
+            <h3 class="font-serif font-bold text-sm sm:text-base text-pink-100">Something Just for You 🎁</h3>
+            <p class="text-[11px] text-pink-300 mt-1">Tap to unwrap 🎁</p>
+          </div>
+          <div id="card3-back" class="hidden text-xs text-pink-100 leading-relaxed font-light py-2">
+            “A promise from Barani: I will always be there to make you smile, celebrate your wins, wipe your tears, and love you more and more every single day! 💍✨”
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-1 w-full justify-center">
+        <button onclick="goToStage(1)" class="px-4 py-2.5 rounded-full border border-pink-700 text-xs text-pink-300 font-medium">Back</button>
+        <button onclick="goToStage(3)" class="px-7 py-2.5 rounded-full font-serif font-bold text-sm bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg">There's More… ❤️</button>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 3: OUR PHOTO MEMORIES ================= -->
+    <section id="stage3" class="hidden flex flex-col items-center text-center space-y-4">
+      <div class="space-y-0.5">
+        <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[11px] font-semibold bg-pink-950/80 text-pink-300 border border-pink-700/50">
+          Our Special Moments 📸
+        </span>
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-pink-100">Our Photo Memories ❤️</h2>
+        <p class="text-xs text-pink-300" id="photoIndexText">Photo 1 of 5</p>
+      </div>
+
+      <!-- Mobile-Neat Polaroid Frame -->
+      <div class="relative w-full max-w-[320px] mx-auto bg-[#FFFDFB] text-[#2A0618] rounded-2xl p-3 shadow-2xl border-4 border-pink-200 text-left">
+        <div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-black shadow-inner">
+          <img id="activePhotoImg" src="/images/photo1.jpg" alt="Memory" class="w-full h-full object-cover">
+          <span id="activePhotoTag" class="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] text-pink-200 border border-pink-400/40">
+            🌸 Sweet outdoor smile
+          </span>
+          <button onclick="likePhoto()" class="absolute bottom-2 right-2 bg-white/95 text-rose-600 px-2.5 py-1 rounded-full text-xs font-bold shadow-md flex items-center gap-1 active:scale-90 transition-transform">
+            ❤️ <span id="photoLikes">143</span>
+          </button>
+        </div>
+
+        <div class="pt-2.5 space-y-1">
+          <h3 id="activePhotoTitle" class="font-serif font-bold text-sm sm:text-base text-[#400B26]">The Smile That Stole My Heart 🌸</h3>
+          <p id="activePhotoCaption" class="text-[11px] sm:text-xs text-neutral-800 leading-relaxed italic bg-pink-50 p-2 rounded-xl border border-pink-200 font-sans">
+            “Un kooda irukkum podhu un face-la varra intha gentle, peaceful smile thaan enakku world-leye most precious thing. Little moments, endless happiness ❤️”
+          </p>
+        </div>
+
+        <!-- Left/Right Arrows -->
+        <button onclick="prevPhoto()" class="absolute -left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-pink-900 border border-pink-400 text-pink-100 flex items-center justify-center shadow-lg font-bold">‹</button>
+        <button onclick="nextPhoto()" class="absolute -right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-pink-900 border border-pink-400 text-pink-100 flex items-center justify-center shadow-lg font-bold">›</button>
+      </div>
+
+      <!-- Thumbnail bar -->
+      <div class="flex gap-1.5 justify-center pt-1">
+        <img onclick="setPhoto(0)" src="/images/photo1.jpg" class="w-10 h-12 rounded-lg object-cover cursor-pointer border-2 border-pink-400 thumb scale-105">
+        <img onclick="setPhoto(1)" src="/images/photo2.jpg" class="w-10 h-12 rounded-lg object-cover cursor-pointer border-2 border-pink-900/60 opacity-60 thumb">
+        <img onclick="setPhoto(2)" src="/images/photo3.jpg" class="w-10 h-12 rounded-lg object-cover cursor-pointer border-2 border-pink-900/60 opacity-60 thumb">
+        <img onclick="setPhoto(3)" src="/images/photo4.jpg" class="w-10 h-12 rounded-lg object-cover cursor-pointer border-2 border-pink-900/60 opacity-60 thumb">
+        <img onclick="setPhoto(4)" src="/images/photo5.jpg" class="w-10 h-12 rounded-lg object-cover cursor-pointer border-2 border-pink-900/60 opacity-60 thumb">
+      </div>
+
+      <div class="flex gap-3 pt-1 w-full justify-center">
+        <button onclick="goToStage(2)" class="px-4 py-2.5 rounded-full border border-pink-700 text-xs text-pink-300 font-medium">Back</button>
+        <button onclick="goToStage(4)" class="px-6 py-2.5 rounded-full font-serif font-bold text-xs sm:text-sm bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg">Open the Letter I Wrote for You 💌</button>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 4: HIDDEN LOVE LETTER ================= -->
+    <section id="stage4" class="hidden flex flex-col items-center text-center space-y-4">
+      <div class="space-y-0.5">
+        <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[11px] font-semibold bg-pink-950/80 text-pink-300 border border-pink-700/50">
+          Words from the Heart 💌
+        </span>
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-pink-100">The Hidden Love Letter</h2>
+      </div>
+
+      <!-- Sealed Envelope -->
+      <div id="sealedLetter" onclick="openLetter()" class="w-full max-w-sm h-56 rounded-2xl bg-gradient-to-br from-[#4A0E2B] via-[#611239] to-[#2B0518] border-2 border-pink-400/50 shadow-2xl flex flex-col items-center justify-center p-5 cursor-pointer active:scale-95 transition-transform pink-glow">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 via-rose-500 to-amber-200 p-1 flex items-center justify-center shadow-lg text-xl">❤️</div>
+        <h3 class="mt-3 font-serif font-bold text-base text-pink-100">Click to Break the Seal & Read 💌</h3>
+        <p class="text-xs text-pink-300 italic mt-0.5">“For En Thangoooo Pula, from Barani”</p>
+      </div>
+
+      <!-- Unfolded Letter with Couple Photo Background Overlay -->
+      <div id="unfoldedLetter" class="hidden relative w-full max-w-md rounded-2xl p-5 shadow-2xl border-2 border-pink-400/50 text-left overflow-hidden bg-[#2A0618]">
+        <!-- Couple photo watermark in letter background -->
+        <div class="absolute inset-0 bg-cover bg-center opacity-25 pointer-events-none mix-blend-screen" style="background-image: url('/images/photo5.jpg');"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-[#33081E]/90 via-[#260517]/95 to-[#1A0410]/95 pointer-events-none"></div>
+
+        <div class="relative z-10 space-y-2.5">
+          <div class="border-b border-pink-700/40 pb-2.5 flex justify-between items-center">
+            <div>
+              <p class="text-[10px] uppercase tracking-wider text-pink-400 font-bold">A Private Note</p>
+              <h3 class="font-serif text-lg sm:text-xl font-bold text-pink-100">My Dear Madhumitha,</h3>
+              <p class="text-xs text-pink-300 italic">En Thangoooo Pula ❤️</p>
+            </div>
+            <img src="/images/photo4.jpg" class="w-11 h-11 rounded-full object-cover border border-pink-400 shadow-md">
+          </div>
+
+          <div id="letterText" class="text-xs sm:text-sm text-pink-100/95 leading-relaxed whitespace-pre-line py-1 max-h-[45vh] overflow-y-auto font-sans font-light">
+          </div>
+
+          <div class="pt-2 border-t border-pink-700/40 flex justify-between items-center text-xs text-pink-300">
+            <span>Written with infinite love ❤️</span>
+            <button onclick="copyLetter()" id="copyBtn" class="px-2.5 py-1 rounded-lg bg-pink-950 border border-pink-700/60 hover:bg-pink-900/60 text-[11px]">Copy Letter</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-1 w-full justify-center">
+        <button onclick="goToStage(3)" class="px-4 py-2.5 rounded-full border border-pink-700 text-xs text-pink-300 font-medium">Back</button>
+        <button onclick="goToStage(5)" class="px-7 py-2.5 rounded-full font-serif font-bold text-sm bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg">One Last Surprise… ✨</button>
+      </div>
+    </section>
+
+    <!-- ================= STAGE 5: FINAL CINEMATIC REVEAL ================= -->
+    <section id="stage5" class="hidden flex flex-col items-center text-center space-y-4">
+      <!-- Couple Best Photo in Pink Golden Ring -->
+      <div class="relative w-56 sm:w-64 aspect-square rounded-3xl p-1 bg-gradient-to-tr from-pink-300 via-rose-500 to-pink-400 shadow-[0_0_40px_rgba(244,63,94,0.7)] pink-glow">
+        <div class="w-full h-full rounded-[22px] overflow-hidden relative">
+          <img src="/images/photo5.jpg" alt="Forever" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          <span class="absolute bottom-2 inset-x-0 mx-auto w-max bg-black/60 backdrop-blur-md px-3 py-0.5 rounded-full text-[11px] text-pink-200 border border-pink-400/40 font-medium">
+            Forever & Always 💍❤️
+          </span>
+        </div>
+      </div>
+
+      <div class="space-y-1 max-w-sm mx-auto text-xs sm:text-sm text-pink-200 font-light">
+        <p>“Every photo holds a memory…”</p>
+        <p>“Every memory holds a little piece of happiness…”</p>
+        <p class="text-pink-100 font-semibold">“And this little website holds a message just for you. ❤️”</p>
+      </div>
+
+      <div class="w-full max-w-md bg-gradient-to-b from-[#400B26] to-[#260516] border-2 border-pink-400/50 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-2">
+        <h2 class="font-serif text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-rose-300 to-pink-100">
+          Madhumitha, My Thangoooo Pula 💗
+        </h2>
+        <p class="text-xs sm:text-sm text-pink-100 leading-relaxed font-light">
+          “Thank you for being a beautiful part of my life. Let's keep creating memories, supporting each other and sharing little moments of happiness.”
+        </p>
+        <p class="font-serif italic text-xs sm:text-sm text-pink-300 pt-2 border-t border-pink-700/40">
+          Made with love, especially for you — Barani ❤️
+        </p>
+      </div>
+
+      <div class="w-full">
+        <button onclick="sendFinalHeart()" class="w-full sm:w-auto px-9 py-3.5 rounded-full font-serif font-bold text-base bg-gradient-to-r from-pink-600 via-rose-500 to-pink-500 text-white shadow-[0_0_35px_rgba(244,63,94,0.8)] active:scale-95 transition-transform flex items-center justify-center gap-2 mx-auto">
+          Send a Heart Back 💖
+        </button>
+        <p id="heartFeedback" class="hidden mt-2 text-xs text-pink-200 font-medium bg-pink-950/90 p-2 rounded-xl border border-pink-400/50">
+          🎉 Your little heart made this surprise even sweeter! ❤️ Barani's heart just fluttered!
+        </p>
+      </div>
+
+      <div class="pt-1">
+        <button onclick="goToStage(1)" class="text-xs text-pink-300 underline">🔄 Replay Journey from Beginning</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="relative z-20 py-4 text-center text-[11px] text-pink-300/60 border-t border-pink-800/30">
+    Created exclusively for Madhumitha with all the love in the world ❤️ Barani
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    const PHOTOS = [
+      {
+        url: "/images/photo1.jpg",
+        title: "The Smile That Stole My Heart 🌸",
+        tag: "🌸 Sweet outdoor sunlit smile",
+        caption: "Un kooda irukkum podhu un face-la varra intha gentle, peaceful smile thaan enakku world-leye most precious thing. Little moments, endless happiness ❤️",
+        likes: 143
+      },
+      {
+        url: "/images/photo2.jpg",
+        title: "Adiye Vaalupulla! 😜👅",
+        tag: "😜 Cute naughty tongue-out face",
+        caption: "Look at this naughty, playful face! Indha cute vaalutharam-ku thaan naan complete-ah flat aanaen. Enna nadandhalum, indha playful child-ah eppovum ulla uyiroda vachukko, my Thangooo! 💗",
+        likes: 288
+      },
+      {
+        url: "/images/photo3.jpg",
+        title: "My Birthday Queen 🎂👑",
+        tag: "🎂 Birthday cake radiant glow",
+        caption: "Indha bright glowing smile paathaale en heart romba fill aaidum. You looked like an angel holding that cake. Intha ulagathula irukura ella happiness-um unakku kedaikkanum, En Thangoooo Pula! ✨",
+        likes: 365
+      },
+      {
+        url: "/images/photo4.jpg",
+        title: "En Thol Saaindha Devathai 🌹💍",
+        tag: "🌹 Shoulder lean romantic gaze",
+        caption: "En thol-la un thala saayum podhu... I feel like the most blessed man in the world. Andha deep romantic look-la enakku un pure love mattum thaan theriyudhu. You are my home. ❤️",
+        likes: 520
+      },
+      {
+        url: "/images/photo5.jpg",
+        title: "My Forever Princess — Thangoooo Pula 👑🧸",
+        tag: "👑 Tiara crown & warmest hug",
+        caption: "Crown on your head, Hello Kitty in your hand, and both of us locked in that warmest hug! Intha tight hug-la dhaan en ulagame irukku. Forever your protector and your Barani. 👑❤️",
+        likes: 999
+      }
+    ];
+
+    let currentPhoto = 0;
+    let currentStage = 1;
+
+    function goToStage(num) {
+      currentStage = num;
+      document.getElementById('stageNum').innerText = num;
+      for(let i=1; i<=5; i++) {
+        document.getElementById('stage' + i).classList.add('hidden');
+      }
+      document.getElementById('stage' + num).classList.remove('hidden');
+
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, idx) => {
+        if(idx === num - 1) {
+          dot.className = "w-4 sm:w-5 h-2 rounded-full bg-pink-400 dot";
+        } else if(idx < num - 1) {
+          dot.className = "w-2 h-2 rounded-full bg-pink-600 dot";
+        } else {
+          dot.className = "w-2 h-2 rounded-full bg-pink-950 dot";
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function answerQuiz(opt) {
+      const alert = document.getElementById('quizAlert');
+      alert.classList.remove('hidden');
+      alert.innerHTML = "Awww! Spot on, my Thangoooo Pula! 🥰 Nobody in this world loves you more than Barani! Now your surprise is unlocked! ❤️";
+      triggerBurst();
+    }
+
+    function flipCard(id) {
+      const front = document.getElementById(id + '-front');
+      const back = document.getElementById(id + '-back');
+      if (front.classList.contains('hidden')) {
+        front.classList.remove('hidden');
+        back.classList.add('hidden');
+      } else {
+        front.classList.add('hidden');
+        back.classList.remove('hidden');
+      }
+    }
+
+    function setPhoto(idx) {
+      currentPhoto = idx;
+      const p = PHOTOS[idx];
+      document.getElementById('activePhotoImg').src = p.url;
+      document.getElementById('activePhotoTag').innerText = p.tag;
+      document.getElementById('activePhotoTitle').innerText = p.title;
+      document.getElementById('activePhotoCaption').innerText = '“' + p.caption + '”';
+      document.getElementById('photoLikes').innerText = p.likes;
+      document.getElementById('photoIndexText').innerText = `Photo ${idx + 1} of 5`;
+
+      const thumbs = document.querySelectorAll('.thumb');
+      thumbs.forEach((th, i) => {
+        if(i === idx) {
+          th.className = "w-10 h-12 rounded-lg object-cover cursor-pointer border-2 border-pink-400 thumb scale-105";
+        } else {
+          th.className = "w-10 h-12 rounded-lg object-cover cursor-pointer border-2 border-pink-900/60 opacity-60 thumb";
+        }
+      });
+    }
+
+    function nextPhoto() {
+      setPhoto((currentPhoto + 1) % PHOTOS.length);
+    }
+
+    function prevPhoto() {
+      setPhoto((currentPhoto - 1 + PHOTOS.length) % PHOTOS.length);
+    }
+
+    function likePhoto() {
+      PHOTOS[currentPhoto].likes++;
+      document.getElementById('photoLikes').innerText = PHOTOS[currentPhoto].likes;
+      triggerBurst();
+    }
+
+    const letterFullText = `My Dear Madhumitha,\n\nEn Thangoooo Pula ❤️\n\nUnna paakumbodhu enakku varra happiness-ah words-la full-ah solla mudiyadhu. Un smile, un kooda spend panra little moments, namma photos — idhellam enakku romba special memories.\n\nSometimes naan en feelings-ah correct-ah express pannama irukkalaam. Aana nee enakku evlo special-nu nee therinjukkanum.\n\nUn kooda neraya sirikkanum, beautiful memories create pannanum, happy moments mattum illa difficult times-layum orutharukku oruthar support-ah irukkanum-nu aasai.\n\nMadhumitha, indha website unakkaga naan create panna oru chinna surprise. Idha open pannumbodhu un face-la oru smile vandha, adhuve enakku romba happiness.\n\nThank you for being a beautiful part of my life.\n\nAlways keep smiling, my Thangoooo Pula. 💗\n\nWith lots of love,\nUn Barani ❤️`;
+
+    function openLetter() {
+      document.getElementById('sealedLetter').classList.add('hidden');
+      document.getElementById('unfoldedLetter').classList.remove('hidden');
+      document.getElementById('letterText').innerText = letterFullText;
+      triggerBurst();
+    }
+
+    function copyLetter() {
+      navigator.clipboard.writeText(letterFullText);
+      document.getElementById('copyBtn').innerText = "Copied ❤️";
+      setTimeout(() => document.getElementById('copyBtn').innerText = "Copy Letter", 2000);
+    }
+
+    let finalHearts = 0;
+    function sendFinalHeart() {
+      finalHearts++;
+      const fb = document.getElementById('heartFeedback');
+      fb.classList.remove('hidden');
+      fb.innerText = `🎉 You've sent ${finalHearts} hearts back to Barani! Barani's heart just fluttered! ❤️`;
+      triggerBurst();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 3500);
+    }
+
+    // Interactive Heart Emitter
+    function triggerBurst() {
+      for(let i=0; i<15; i++) {
+        const el = document.createElement('div');
+        el.innerText = '💖';
+        el.style.position = 'fixed';
+        el.style.left = (Math.random()*80 + 10) + '%';
+        el.style.top = (Math.random()*80 + 10) + '%';
+        el.style.fontSize = '26px';
+        el.style.pointerEvents = 'none';
+        el.style.zIndex = '999';
+        el.style.transition = 'all 1.4s ease-out';
+        document.body.appendChild(el);
+        setTimeout(() => {
+          el.style.transform = 'translateY(-100px) scale(2)';
+          el.style.opacity = '0';
+        }, 20);
+        setTimeout(() => el.remove(), 1500);
+      }
+    }
+
+    // Audio Engine
+    let audioCtx = null;
+    let isPlaying = false;
+    let musicTimer = null;
+    function toggleMusic() {
+      if(!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if(isPlaying) {
+        isPlaying = false;
+        clearTimeout(musicTimer);
+        document.getElementById('musicBtn').innerText = "🎵 Play Melody";
+      } else {
+        isPlaying = true;
+        document.getElementById('musicBtn').innerText = "🔊 Playing Chimes";
+        const notes = [392, 440, 523, 587, 659, 523, 587, 440, 392, 329, 392, 523];
+        let nIdx = 0;
+        function playNote() {
+          if(!isPlaying) return;
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(notes[nIdx % notes.length], now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.exponentialRampToValueAtTime(0.12, now + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 1.3);
+          nIdx++;
+          musicTimer = setTimeout(playNote, 600);
+        }
+        playNote();
+      }
+    }
+
+    // Love Theme Canvas Animation (Falling Petals & Rising Pink Hearts)
+    (function initCanvas() {
+      const canvas = document.getElementById('loveCanvas');
+      const ctx = canvas.getContext('2d');
+      let w = (canvas.width = window.innerWidth);
+      let h = (canvas.height = window.innerHeight);
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+
+      const hearts = Array.from({length: 22}).map(() => ({
+        x: Math.random()*w, y: Math.random()*h,
+        size: Math.random()*16 + 8,
+        speedY: Math.random()*0.8 + 0.4,
+        sway: Math.random()*2 + 1,
+        swayOffset: Math.random()*Math.PI*2,
+        opacity: Math.random()*0.4 + 0.2
+      }));
+
+      const petals = Array.from({length: 18}).map(() => ({
+        x: Math.random()*w, y: Math.random()*h,
+        size: Math.random()*12 + 10,
+        speedY: Math.random()*1.1 + 0.6,
+        speedX: Math.random()*0.8 - 0.4,
+        rotation: Math.random()*360,
+        rotSpeed: (Math.random()-0.5)*1.5,
+        flip: Math.random()*Math.PI,
+        flipSpeed: Math.random()*0.03 + 0.01,
+        opacity: Math.random()*0.45 + 0.3
+      }));
+
+      const stars = Array.from({length: 30}).map(() => ({
+        x: Math.random()*w, y: Math.random()*h,
+        radius: Math.random()*2 + 0.8,
+        alpha: Math.random(),
+        speed: Math.random()*0.02 + 0.01
+      }));
+
+      function drawHeart(x, y, size, alpha) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = '#F472B6';
+        ctx.shadowColor = '#EC4899';
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        const top = size * 0.3;
+        ctx.moveTo(0, top);
+        ctx.bezierCurveTo(0, 0, -size/2, 0, -size/2, top);
+        ctx.bezierCurveTo(-size/2, (size+top)/2, 0, size, 0, size*1.3);
+        ctx.bezierCurveTo(0, size, size/2, (size+top)/2, size/2, top);
+        ctx.bezierCurveTo(size/2, 0, 0, 0, 0, top);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawPetal(p) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI)/180);
+        ctx.scale(Math.cos(p.flip), 1);
+        ctx.globalAlpha = p.opacity;
+        const grad = ctx.createLinearGradient(0, -p.size, 0, p.size);
+        grad.addColorStop(0, '#F472B6');
+        grad.addColorStop(0.5, '#EC4899');
+        grad.addColorStop(1, '#9D174D');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(0, -p.size);
+        ctx.bezierCurveTo(-p.size*0.7, -p.size*0.5, -p.size*0.6, p.size*0.6, 0, p.size);
+        ctx.bezierCurveTo(p.size*0.6, p.size*0.6, p.size*0.7, -p.size*0.5, 0, -p.size);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      let time = 0;
+      function animate() {
+        time += 0.02;
+        ctx.clearRect(0, 0, w, h);
+
+        stars.forEach(s => {
+          s.alpha += s.speed;
+          ctx.save();
+          ctx.fillStyle = '#FDE68A';
+          ctx.globalAlpha = (Math.sin(s.alpha) + 1)/2 * 0.7;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI*2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        hearts.forEach(hItem => {
+          hItem.y -= hItem.speedY;
+          hItem.swayOffset += 0.02;
+          const cx = hItem.x + Math.sin(hItem.swayOffset)*hItem.sway;
+          if(hItem.y < -30) { hItem.y = h + 30; hItem.x = Math.random()*w; }
+          drawHeart(cx, hItem.y, hItem.size, hItem.opacity);
+        });
+
+        petals.forEach(p => {
+          p.y += p.speedY;
+          p.x += p.speedX + Math.sin(time + p.flip)*0.5;
+          p.rotation += p.rotSpeed;
+          p.flip += p.flipSpeed;
+          if(p.y > h + 40) { p.y = -30; p.x = Math.random()*w; }
+          drawPetal(p);
+        });
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+  </script>
+</body>
+</html>
+
